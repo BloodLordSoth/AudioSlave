@@ -61,6 +61,7 @@ function hide(){
     btn1.style.display = 'flex'
     btn2.style.display = 'none'
     box.style.display = 'none'
+    box.innerHTML = ''
 }
 
 
