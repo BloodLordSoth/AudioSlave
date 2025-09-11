@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Music</title>
+    <link rel="stylesheet" href="./styles.css"/>
+</head>
+<body>
+    <div id="text"><h1><u>Upload a song</u>:</h1></div>
+    <form id="form">
+        <div id="box">
+            <input type="file" id="input"/>
+          <!--  <input type="text" id="name" placeholder="Song Name"/> -->
+            <button type="submit">Upload</button>
+        </div>
+        <div id="update"><p id="success">Upload successful!</p></div>
+    </form>
+    <button id="btn2" onclick="retrieve()">Load List</button>
+    <button id="btn3" onclick="hide()">Close List</button>
+    <div id="box2"></div>
+</body>
+</html>
+<script src="./index.js"></script>
