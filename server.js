@@ -57,7 +57,7 @@ app.post('/login', async (req, res) => {
 
         const user = { id: userRecord.id, name: username }
 
-        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: '10m' })
+        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: '55m' })
 
         res.status(200).json({ accessToken: accessToken })
 
