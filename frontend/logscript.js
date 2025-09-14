@@ -34,6 +34,7 @@ async function submit(){
     const token = localStorage.getItem('accessToken')
 
     await fetch('/dashboard', {
+        method: "GET",
         headers: { "authorization": `Bearer ${token}` }
     })
 

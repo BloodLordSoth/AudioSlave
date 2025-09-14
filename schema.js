@@ -1,6 +1,12 @@
 import Database from 'better-sqlite3'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
-const db = new Database('audioData.db')
+const __file = fileURLToPath(import.meta.url)
+const __dir = path.dirname(__file)
+const dbPath = path.join(__dir, 'audioData.db')
+
+const db = new Database(dbPath)
 
 db.pragma('foreign_keys = ON')
 
