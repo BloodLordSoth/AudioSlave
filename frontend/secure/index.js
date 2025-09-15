@@ -7,14 +7,20 @@ const boxIn = document.getElementById('box-in')
 const audioFile = document.getElementById('input')
 const delDisplay = document.getElementById('delete')
 const valID = document.getElementById('value')
+const playBtn = document.getElementById('playBtn')
+const pauseBtn = document.getElementById('pauseBtn')
+const stopBtn = document.getElementById('stopBtn')
+const delFile = document.getElementById('delFile')
 
 const token = localStorage.getItem('accessToken')
 
-if (!token){
-    window.alert('your session has expired')
-    localStorage.removeItem('accessToken')
-    window.location.href = '/'
-}
+//if (!token){
+//    window.alert('your session has expired')
+//    localStorage.removeItem('accessToken')
+//    window.location.href = '/'
+//}
+
+let sound = null;
 
 async function submit(){
     const text = document.getElementById('update')
@@ -39,6 +45,7 @@ async function submit(){
         return
     }
 
+    audioFile.value = ''
     boxOut.style.display = 'flex'
     boxIn.style.animation = 'run-bar 3s forwards'
 
@@ -79,6 +86,48 @@ async function retrieve(){
     })
 }
 
+async function playSong(){
+
+    if (sound === null){
+        const res = await fetch(`/music/${valID.value}`, {
+            method: "GET",
+         })
+
+        if (!res.ok){
+            window.alert('No song has been selected')
+            return
+        }
+
+        const data = await res.blob()
+        const audioURL = URL.createObjectURL(data)
+        sound = new Audio(audioURL)
+        sound.volume = 0.5
+        sound.play()
+    }
+    
+    pauseBtn.style.display = 'inline'
+    playBtn.style.display = 'none'
+    sound.play()
+    valID.value = ''
+}
+
+function pauseSong(){
+    if (!sound){
+        return
+    }
+
+    playBtn.style.display = 'inline'
+    pauseBtn.style.display = 'none'
+    sound.pause()
+}
+
+function stopSong(){
+    sound.pause()
+    playBtn.style.display = 'inline'
+    pauseBtn.style.display = 'none'
+    sound = null
+}
+
 function hide(){
     btn1.style.display = 'flex'
     btn2.style.display = 'none'
@@ -93,7 +142,10 @@ async function removeSong(){
     })
 
     if (res.status === 204){
-        window.alert('File has been deleted')
+        delFile.style.display = 'flex'
+        setTimeout(() => {
+            delFile.style.display = 'none'
+        }, 2000)
         hide()
         value.value = ''
         return

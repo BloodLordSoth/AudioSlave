@@ -44,7 +44,6 @@ async function submit(){
 
 }
 
-
 form.addEventListener('submit', (e) => {
     e.preventDefault()
     submit()

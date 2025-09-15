@@ -141,6 +141,17 @@ button#btn3 {
 #delete {
     display: none;
 }
+#pauseBtn {
+    display: none;
+}
+#delFile {
+    display: none;
+    color: rgb(158, 6, 6);
+    font-family: monospace;
+    font-size: 22px;
+    justify-content: center;
+}
+
 
 @keyframes run-bar {
     0% { width: 0%; }
