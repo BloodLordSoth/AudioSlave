@@ -14,11 +14,11 @@ const delFile = document.getElementById('delFile')
 
 const token = localStorage.getItem('accessToken')
 
-//if (!token){
-//    window.alert('your session has expired')
-//    localStorage.removeItem('accessToken')
-//    window.location.href = '/'
-//}
+if (!token){
+   window.alert('your session has expired')
+    localStorage.removeItem('accessToken')
+    window.location.href = '/'
+}
 
 let sound = null;
 
