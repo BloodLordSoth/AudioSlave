@@ -119,6 +119,10 @@ app.get('/music/:id', (req, res) => {
     }
 })
 
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dir, 'frontend', 'register.html'))
+})
+
 app.delete('/music/:id', (req, res) => {
     const songID = req.params.id
 

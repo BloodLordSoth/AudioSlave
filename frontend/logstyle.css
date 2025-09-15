@@ -74,3 +74,13 @@ h1 {
     justify-content: center;
     height: 40px;
 }
+#success {
+    display: none;
+    justify-content: center;
+    color: lightgreen;
+}
+#link {
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
+}
