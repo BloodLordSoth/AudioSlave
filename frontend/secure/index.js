@@ -55,9 +55,14 @@ async function submit(){
 
     setTimeout(() => {
         text.style.display = 'none'
+        btn1.style.display = 'inline'
+        btn2.style.display = 'none'
         boxIn.style.animation = 'none'
         boxOut.style.display = 'none'
+        box.style.display = 'none'
+        delDisplay.style.display = 'none'
     }, 6000)
+
 }
 
 async function retrieve(){
@@ -79,14 +84,37 @@ async function retrieve(){
 
     const req = await res.json()
     req.info.forEach(item => {
+        const link = document.createElement('a')
+        const link2 = document.createElement('a')
+        link2.href = `/download/${item.id}`
+        link2.textContent = 'download'
+        link.href = `/music/${item.id}`
+        link.style.color = 'inherit'
+        link.style.textDecoration = 'none'
+
         const div = document.createElement('div')
-        div.textContent = `${item.id}: ${item.song_name}`
+        div.innerHTML = `${item.id}: ${item.song_name}`
         div.classList.add('items')
-        box.appendChild(div)
+        div.appendChild(link2)
+        link.appendChild(div)
+        box.appendChild(link)
+
+        link2.addEventListener('click', (e) => {
+            e.stopPropagation()
+        })
+
+        link.addEventListener('click', (e) => {
+            e.preventDefault()
+            playSong(item.id)
+        })
     })
 }
 
-async function playSong(){
+async function playSong(id = null){
+
+    if (id !== null){
+            valID.value = id
+        }
 
     if (sound === null){
         const res = await fetch(`/music/${valID.value}`, {
@@ -97,6 +125,7 @@ async function playSong(){
             window.alert('No song has been selected')
             return
         }
+
 
         const data = await res.blob()
         const audioURL = URL.createObjectURL(data)

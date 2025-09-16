@@ -88,6 +88,23 @@ app.post('/song', (req, res) => {
     }
 })
 
+app.get('/download/:id', (req, res) => {
+    const id = req.params.id
+
+    if (!id) return res.sendStatus(401);
+
+    try {
+        const songData = db.prepare('SELECT * FROM audio WHERE id = ?').get(id)
+        res.set('Content-Disposition', `Attachment; filename=${songData.song_name}`)
+        res.set('Content-Type', 'audio/mpeg')
+        res.status(200).send(songData.song)
+    }
+    catch (e) {
+        res.sendStatus(500)
+        console.error(e)
+    }
+})
+
 app.get('/list', authenticate, (req, res) => {
     try {
         const userRecord = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id)
