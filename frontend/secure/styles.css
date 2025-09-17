@@ -130,6 +130,11 @@ button#btn3 {
     background-color: black;
     height: 30px;
 }
+.items:hover {
+    border: 2px solid black;
+    background-color: white;
+    color: black;
+}
 #value {
     width: 50px;
     border: 2px solid white;
