@@ -11,8 +11,10 @@ const playBtn = document.getElementById('playBtn')
 const pauseBtn = document.getElementById('pauseBtn')
 const stopBtn = document.getElementById('stopBtn')
 const delFile = document.getElementById('delFile')
-
+const welcome = document.getElementById('welcome')
 const token = localStorage.getItem('accessToken')
+const username = localStorage.getItem('username')
+welcome.textContent = `${username}'s Dashboard`
 
 if (!token){
    window.alert('your session has expired')
@@ -193,4 +195,5 @@ window.addEventListener('load', () => {
 
 window.addEventListener('beforeunload', () => {
     localStorage.removeItem('accessToken')
+    localStorage.removeItem('username')
 })

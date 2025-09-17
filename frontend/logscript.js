@@ -31,6 +31,7 @@ async function submit(){
 
     const bell = await res.json()
     localStorage.setItem('accessToken', bell.accessToken)
+    localStorage.setItem('username', bell.name)
     const token = localStorage.getItem('accessToken')
 
     await fetch('/dashboard', {

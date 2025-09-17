@@ -59,7 +59,7 @@ app.post('/login', async (req, res) => {
 
         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: '55m' })
 
-        res.status(200).json({ accessToken: accessToken })
+        res.status(200).json({ name: username, accessToken: accessToken })
 
     }
     catch (e) {
