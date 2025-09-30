@@ -10,7 +10,7 @@
 
 ## Description
 
-AudioSlave allows a user to upload their music to the Database,  play their music in the web browser, or share their uploaded -  music over a Discord VC with the AudioSlavebot
+AudioSlave allows a user to upload their music to the Database,  play their music in the web browser, or share their uploaded music over a Discord VC with the AudioSlavebot
 
 
 **[github.com/BloodLordSoth/AudioSlaveBot](http://github.com/BloodLordSoth/AudioSlaveBot)**
