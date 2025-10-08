@@ -1,8 +1,8 @@
 import Database from 'better-sqlite3'
 
-const dbPath = '/mnt/data/audioData.db'
+//const dbPath = '/mnt/data/audioData.db'
 
-//const dbPath = './audioData.db'
+const dbPath = './audioData.db'
 
 const db = new Database(dbPath)
 db.pragma('foreign_keys = ON')
