@@ -1,36 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AudioSlave Dashboard</title>
-    <link rel="stylesheet" href="./secure/styles.css"/>
-</head>
-<body>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
     <div id="text"><h1 id="welcome"></h1></div>
     <form id="form">
-        <div id="box">
-            <img id="bg" src="../assets/audioslave.jpg" width="200"/>
-            <input type="file" id="input"/>
-          <!--  <input type="text" id="name" placeholder="Song Name"/> -->
-            <button type="submit">Upload</button>
-        </div>
-        <div id="box-out">
-            <div id="box-in"></div>
-        </div>
-        <div id="update"><p id="success">Upload successful!</p></div>
-        <div id="remove"><p id="delFile">File deleted!</p></div>
+      <div id="box">
+        <img id="bg" src="../assets/audioslave.jpg" width="200" />
+        <input type="file" id="input" />
+        <!--  <input type="text" id="name" placeholder="Song Name"/> -->
+        <button type="submit">Upload</button>
+      </div>
+      <div id="box-out">
+        <div id="box-in"></div>
+      </div>
+      <div id="update"><p id="success">Upload successful!</p></div>
+      <div id="remove"><p id="delFile">File deleted!</p></div>
     </form>
     <button id="btn2" onclick="retrieve()">Load List</button>
     <button id="btn3" onclick="hide()">Close List</button>
     <div id="delete">
-        <input type="text" id="value" placeholder="id"/>
-        <button id="btn4" onclick="removeSong()">Remove</button>
-        <button id="playBtn" onclick="playSong()">Play</button>
-        <button id="pauseBtn" onclick="pauseSong()">Pause</button>
-        <button id="stopBtn" onclick="stopSong()">Stop</button>
+      <input type="text" id="value" placeholder="id" />
+      <button id="btn4" onclick="removeSong()">Remove</button>
+      <button id="playBtn" onclick="playSong()">Play</button>
+      <button id="pauseBtn" onclick="pauseSong()">Pause</button>
+      <button id="stopBtn" onclick="stopSong()">Stop</button>
     </div>
     <div id="box2"></div>
-</body>
+  </body>
 </html>
 <script src="./secure/index.js"></script>

@@ -1,5 +1,6 @@
 # AudioSlave
 
+![badge](https://github.com/BloodLordSoth/AudioSlave/actions/workflows/ci.yml/badge.svg)
 <br>
 
 ### DEMO

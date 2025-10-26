@@ -1,8 +1,7 @@
-import app from './app.js'
+import app from "./app.js";
 
-const PORT = 4000
+const PORT = 4000;
 
 app.listen(PORT, () => {
-    console.log(`listening on localhost:${PORT}`)
-})
-
+  console.log(`listening on localhost:${PORT}`);
+});
