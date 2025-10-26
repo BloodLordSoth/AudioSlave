@@ -7,6 +7,10 @@ on:
 jobs:
   run_test:
     runs-on: ubuntu-latest
+
+    env:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
     steps:
       - name: checkout
         uses: actions/checkout@v4
