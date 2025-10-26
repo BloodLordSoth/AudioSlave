@@ -141,14 +141,13 @@ app.get("/music/:id", (req, res) => {
   }
 });
 
-app.get('/tokencheck', authenticate, (req, res, next) => {
-    try {
-        res.sendStatus(200)
-    }
-    catch (e) {
-        next(e)
-    }
-})
+app.get("/tokencheck", authenticate, (req, res, next) => {
+  try {
+    res.sendStatus(200);
+  } catch (e) {
+    next(e);
+  }
+});
 
 app.delete("/music/:id", (req, res) => {
   const songID = req.params.id;
