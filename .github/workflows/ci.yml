@@ -1,0 +1,25 @@
+name: CI test control
+
+on:
+  pull_request:
+    branch: [ addtests ]
+
+jobs:
+  run_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: install node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: clean install
+        run: npm ci
+
+      - name: run tests
+        run: npm run test
+      
+

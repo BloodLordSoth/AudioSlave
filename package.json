@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "devStart": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,8 @@
     "multer": "^2.0.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4"
   }
 }
