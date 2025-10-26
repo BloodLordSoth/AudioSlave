@@ -16,13 +16,26 @@ const token = localStorage.getItem("accessToken");
 const username = localStorage.getItem("username");
 welcome.textContent = `${username}'s Dashboard`;
 
-if (!token) {
-  window.alert("your session has expired");
+let sound = null;
+
+function logout() {
   localStorage.removeItem("accessToken");
-  window.location.href = "/";
+  window.location.href = "http://localhost:4000/";
 }
 
-let sound = null;
+async function checkToken() {
+  const res = await fetch("/tokencheck", {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) {
+    // logout()
+  }
+}
+setInterval(() => {
+  checkToken();
+}, 10000);
 
 async function submit() {
   const text = document.getElementById("update");
