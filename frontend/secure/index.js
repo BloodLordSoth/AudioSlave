@@ -30,7 +30,7 @@ async function checkToken() {
   });
 
   if (!res.ok) {
-    // logout()
+      logout()
   }
 }
 setInterval(() => {
