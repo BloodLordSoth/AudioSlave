@@ -7,13 +7,19 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <div id="headbox">
+            <h2>Audio<span id="slave">Slave</span></h2>
+            <a onclick="logout()" href="#">Logout</a>
+        </div>
+    </header>
+    <div id="trail"></div>
     <div id="text"><h1 id="welcome"></h1></div>
     <form id="form">
       <div id="box">
         <img id="bg" src="../assets/audioslave.jpg" width="200" />
         <input type="file" id="input" />
         <!--  <input type="text" id="name" placeholder="Song Name"/> -->
-        <button type="submit">Upload</button>
+        <button id="subbtn" type="submit">Upload</button>
       </div>
       <div id="box-out">
         <div id="box-in"></div>
@@ -33,4 +39,4 @@
     <div id="box2"></div>
   </body>
 </html>
-<script src="./secure/index.js"></script>
+<script src="./index.js"></script>

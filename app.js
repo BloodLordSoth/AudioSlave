@@ -1,8 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
+//import path from "path";
+//import { fileURLToPath } from "url";
 import db from "./schema.js";
 import multer from "multer";
 import { hashPass, checkHash } from "./auth.js";
@@ -19,8 +19,8 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
-const __file = fileURLToPath(import.meta.url);
-const __dir = path.dirname(__file);
+//const __file = fileURLToPath(import.meta.url);
+//const __dir = path.dirname(__file);
 app.use(express.static("./frontend"));
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -141,9 +141,14 @@ app.get("/music/:id", (req, res) => {
   }
 });
 
-app.get("/register", (req, res) => {
-  res.sendFile(path.join(__dir, "frontend", "register.html"));
-});
+app.get('/tokencheck', authenticate, (req, res, next) => {
+    try {
+        res.sendStatus(200)
+    }
+    catch (e) {
+        next(e)
+    }
+})
 
 app.delete("/music/:id", (req, res) => {
   const songID = req.params.id;
