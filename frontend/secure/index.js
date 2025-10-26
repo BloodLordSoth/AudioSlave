@@ -16,6 +16,10 @@ const token = localStorage.getItem("accessToken");
 const username = localStorage.getItem("username");
 welcome.textContent = `${username}'s Dashboard`;
 
+if (!token){
+  logout()
+}
+
 let sound = null;
 
 function logout() {
