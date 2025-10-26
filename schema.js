@@ -1,14 +1,13 @@
-import Database from 'better-sqlite3'
+import Database from "better-sqlite3";
 
 //const dbPath = '/mnt/data/audioData.db'
 
-const dbPath = './audioData.db'
+const dbPath = "./audioData.db";
 
-const db = new Database(dbPath)
-db.pragma('foreign_keys = ON')
+const db = new Database(dbPath);
+db.pragma("foreign_keys = ON");
 
-
-  db.exec(`
+db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT UNIQUE NOT NULL,
@@ -22,7 +21,6 @@ db.pragma('foreign_keys = ON')
       user_id INTEGER NOT NULL,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     );
-  `)
+  `);
 
-
-export default db
+export default db;
