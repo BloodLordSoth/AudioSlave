@@ -20,7 +20,7 @@ let sound = null;
 
 function logout() {
   localStorage.removeItem("accessToken");
-  window.location.href = "http://localhost:4000/";
+  window.location.href = "../index.html";
 }
 
 async function checkToken() {
