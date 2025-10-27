@@ -140,9 +140,8 @@ app.get("/music/:id", async (req, res, next) => {
     };
 
     const command = new GetObjectCommand(params);
-    const signedURL = await getSignedUrl(s3, command, { exipiresIn: 3600 });
+    const signedURL = await getSignedUrl(s3, command, { expiresIn: 3600 });
 
-    //res.setHeader("Content-Type", "audio/mpeg");
     res.status(200).send({ url: signedURL });
   } catch (e) {
     next(e);
