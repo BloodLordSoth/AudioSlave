@@ -10,6 +10,8 @@ jobs:
 
     env:
       ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_TOKEN: ${{ secrets.DATABASE_TOKEN }}
 
     steps:
       - name: checkout
