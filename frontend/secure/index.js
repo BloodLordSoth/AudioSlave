@@ -18,6 +18,10 @@ welcome.textContent = `${username}'s Dashboard`;
 
 let sound = null;
 
+if (!token) {
+  logout();
+}
+
 function logout() {
   localStorage.removeItem("accessToken");
   window.location.href = "http://localhost:4000/";
@@ -30,7 +34,7 @@ async function checkToken() {
   });
 
   if (!res.ok) {
-    // logout()
+    logout();
   }
 }
 setInterval(() => {

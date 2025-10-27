@@ -29,3 +29,9 @@ export class ConstraintError extends AppError {
     super(message, 409);
   }
 }
+
+export class InvalidCredentialError extends AppError {
+  constructor(message = "The password you\'ve entered is incorrect") {
+    super(message, 410);
+  }
+}

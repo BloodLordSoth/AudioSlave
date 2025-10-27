@@ -25,9 +25,11 @@ async function register() {
     body: JSON.stringify(dataObj),
   });
 
-  if (!res.ok) {
-    window.alert("There was a server issue");
+  if (res.status === 409) {
+    window.alert("That username is already taken");
     return;
+  } else {
+    window.alert("There was a server issue");
   }
 
   success.style.display = "flex";

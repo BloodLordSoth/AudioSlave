@@ -20,7 +20,11 @@ async function submit() {
     body: JSON.stringify(dataObj),
   });
 
-  if (!res.ok) {
+  if (res.status === 410) {
+    window.alert("Invalid password");
+    password.value = "";
+    return;
+  } else if (!res.ok) {
     text.style.display = "flex";
     setTimeout(() => {
       text.style.display = "none";
