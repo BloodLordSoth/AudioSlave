@@ -16,6 +16,10 @@ const token = localStorage.getItem("accessToken");
 const username = localStorage.getItem("username");
 welcome.textContent = `${username}'s Dashboard`;
 
+if (!token){
+  logout()
+}
+
 let sound = null;
 
 if (!token) {
@@ -24,7 +28,7 @@ if (!token) {
 
 function logout() {
   localStorage.removeItem("accessToken");
-  window.location.href = "http://localhost:4000/";
+  window.location.href = "../index.html";
 }
 
 async function checkToken() {
