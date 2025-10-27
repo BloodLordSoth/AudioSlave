@@ -14,6 +14,7 @@ const delFile = document.getElementById("delFile");
 const welcome = document.getElementById("welcome");
 const token = localStorage.getItem("accessToken");
 const username = localStorage.getItem("username");
+
 welcome.textContent = `${username}'s Dashboard`;
 
 if (!token) {
@@ -47,7 +48,6 @@ setInterval(() => {
 
 async function submit() {
   const text = document.getElementById("update");
-  // const name = document.getElementById('name')
 
   if (!audioFile.files[0]) {
     window.alert("No song has been selected");
@@ -147,9 +147,9 @@ async function playSong(id = null) {
       return;
     }
 
-    const data = await res.blob();
-    const audioURL = URL.createObjectURL(data);
-    sound = new Audio(audioURL);
+    const data = await res.json();
+    sound = new Audio();
+    sound.src = data.url;
     sound.volume = 0.5;
     sound.play();
   }

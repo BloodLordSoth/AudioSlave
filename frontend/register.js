@@ -28,7 +28,7 @@ async function register() {
   if (res.status === 409) {
     window.alert("That username is already taken");
     return;
-  } else {
+  } else if (res.status > 420) {
     window.alert("There was a server issue");
   }
 

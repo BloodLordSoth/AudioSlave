@@ -1,8 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-//import path from "path";
-//import { fileURLToPath } from "url";
 import db from "./schema.js";
 import multer from "multer";
 import { hashPass, checkHash } from "./auth.js";
@@ -15,16 +13,44 @@ import {
   UnauthorizedError,
   InvalidCredentialError,
 } from "./errors.js";
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import {
+  createUser,
+  fetchUser,
+  insertAudio,
+  fetchSongs,
+  getSong,
+  deleteSong,
+} from "./db.js";
+import crypto from "crypto";
+import path from "path";
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
-//const __file = fileURLToPath(import.meta.url);
-//const __dir = path.dirname(__file);
 app.use(express.static("./frontend"));
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+
+const bucket = process.env.BUCKET;
+const region = process.env.BUCKET_REGION;
+const accessKey = process.env.BUCKET_ACCESS_KEY;
+const secretKey = process.env.BUCKET_SECRET_KEY;
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretKey,
+  },
+  region: region,
+});
 
 app.post("/register", async (req, res, next) => {
   try {
@@ -33,10 +59,7 @@ app.post("/register", async (req, res, next) => {
     if (!username || !password) throw new UnauthorizedError();
 
     const hash = await hashPass(password);
-    const stmt = db.prepare(
-      "INSERT INTO users (username, password) VALUES (?, ?)",
-    );
-    stmt.run(username, hash);
+    await createUser(username, hash);
     res.status(200).send("Registration success!");
   } catch (e) {
     next(e);
@@ -49,9 +72,7 @@ app.post("/login", async (req, res, next) => {
 
     if (!username || !password) throw new UnauthorizedError();
 
-    const userRecord = db
-      .prepare("SELECT * FROM users WHERE username = ?")
-      .get(username);
+    const userRecord = await fetchUser(username);
 
     if (!userRecord) throw new NotFoundError();
 
@@ -66,24 +87,6 @@ app.post("/login", async (req, res, next) => {
     });
 
     res.status(200).json({ name: username, accessToken: accessToken });
-  } catch (e) {
-    next(e);
-  }
-});
-
-app.post("/song", (req, res, next) => {
-  try {
-    const userid = req.body.userid;
-
-    if (!userid) throw new UnauthorizedError();
-
-    const info = db.prepare("SELECT * FROM audio WHERE id = ?").get(userid);
-
-    if (!info) throw new NotFoundError();
-
-    const audio = info.song;
-    res.setHeader("Content-Type", "audio/mpeg");
-    res.status(200).send(audio);
   } catch (e) {
     next(e);
   }
@@ -107,35 +110,40 @@ app.get("/download/:id", (req, res, next) => {
   }
 });
 
-app.get("/list", authenticate, (req, res, next) => {
+app.get("/list", authenticate, async (req, res, next) => {
   try {
-    const userRecord = db
-      .prepare("SELECT * FROM users WHERE id = ?")
-      .get(req.user.id);
+    if (!req.user.id) throw new ForbiddenError();
 
-    if (!userRecord) throw new UnauthorizedError();
+    const songData = await fetchSongs(req.user.id);
 
-    const songData = db
-      .prepare("SELECT * FROM audio WHERE user_id = ?")
-      .all(userRecord.id);
+    if (!songData) throw new NotFoundError();
+
     res.status(200).json({ info: songData });
   } catch (e) {
     next(e);
   }
 });
 
-app.get("/music/:id", (req, res, next) => {
+app.get("/music/:id", async (req, res, next) => {
   try {
     const songID = req.params.id;
 
     if (!songID) throw new UnauthorizedError();
 
-    const songData = db.prepare("SELECT * FROM audio WHERE id = ?").get(songID);
+    const songData = await getSong(songID);
 
     if (!songData) throw new NotFoundError();
 
-    res.setHeader("Content-Type", "audio/mpeg");
-    res.status(200).send(songData.song);
+    const params = {
+      Bucket: bucket,
+      Key: songData.key,
+    };
+
+    const command = new GetObjectCommand(params);
+    const signedURL = await getSignedUrl(s3, command, { exipiresIn: 3600 });
+
+    //res.setHeader("Content-Type", "audio/mpeg");
+    res.status(200).send({ url: signedURL });
   } catch (e) {
     next(e);
   }
@@ -149,38 +157,70 @@ app.get("/tokencheck", authenticate, (req, res, next) => {
   }
 });
 
-app.delete("/music/:id", (req, res, next) => {
+app.delete("/music/:id", async (req, res, next) => {
   try {
     const songID = req.params.id;
 
     if (!songID) throw new UnauthorizedError();
 
-    db.prepare("DELETE FROM audio WHERE id = ?").run(songID);
+    const songInfo = await getSong(songID);
+
+    const params = {
+      Bucket: bucket,
+      Key: songInfo.key,
+    };
+
+    const command = new DeleteObjectCommand(params);
+    await s3.send(command);
+
+    await deleteSong(songID);
+
     res.sendStatus(204);
   } catch (e) {
     next(e);
   }
 });
 
-app.post("/upload", upload.single("audio"), authenticate, (req, res, next) => {
-  try {
-    if (!req.file) throw new UnauthorizedError();
+app.post(
+  "/upload",
+  upload.single("audio"),
+  authenticate,
+  async (req, res, next) => {
+    try {
+      const username = req.user.name;
+      const file = req.file;
+      if (!req.file || !req.user.name) throw new UnauthorizedError();
 
-    const userRecord = db
-      .prepare("SELECT * FROM users WHERE id = ?")
-      .get(req.user.id);
+      const fname = crypto.randomBytes(16).toString("hex");
+      const ext = path.extname(file.originalname);
+      const key = `${username}/${fname}${ext}`;
 
-    if (!userRecord) throw new NotFoundError();
+      const params = {
+        Bucket: bucket,
+        Key: key,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      };
 
-    const stmt = db.prepare(
-      "INSERT INTO audio (song, song_name, user_id) VALUES (?, ?, ?)",
-    );
-    stmt.run(req.file.buffer, req.file.originalname, userRecord.id);
-    res.status(200).send("Song has been uploaded!");
-  } catch (e) {
-    next(e);
-  }
-});
+      const url = `https://${bucket}.s3.${region}.amazonaws/${username}/${fname}${ext}`;
+
+      const command = new PutObjectCommand(params);
+      await s3.send(command);
+
+      await insertAudio(
+        req.user.id,
+        key,
+        url,
+        file.mimetype,
+        file.originalname,
+      );
+
+      res.status(200).send("Song has been uploaded!");
+    } catch (e) {
+      next(e);
+    }
+  },
+);
 
 function authenticate(req, res, next) {
   const authHeader = req.headers["authorization"];
